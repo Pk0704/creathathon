@@ -37,7 +37,9 @@ const EnergyFoodFinder = () => {
       dietOptions: ['vegetarian', 'vegan', 'gluten-free'],
       featured: [
         { name: "Grilled Chicken Salad", carbs: 15, protein: 35, sugar: 8, energyScore: 5, price: 12.99, calories: 380 },
-        { name: "Quinoa Power Bowl", carbs: 45, protein: 25, sugar: 12, energyScore: 4, price: 13.99, vegetarian: true, calories: 420 }
+        { name: "Quinoa Power Bowl", carbs: 45, protein: 25, sugar: 12, energyScore: 4, price: 13.99, vegetarian: true, calories: 420 },
+        { name: "Green Smoothie", carbs: 35, protein: 8, sugar: 22, energyScore: 3, price: 8.99, vegetarian: true, vegan: true, calories: 180, category: "drink" },
+        { name: "Protein Shake", carbs: 20, protein: 30, sugar: 15, energyScore: 4, price: 9.99, calories: 280, category: "drink" }
       ]
     },
     {
@@ -52,7 +54,9 @@ const EnergyFoodFinder = () => {
       dietOptions: ['vegetarian'],
       featured: [
         { name: "Fettuccine Alfredo", carbs: 85, protein: 20, sugar: 15, energyScore: 2, price: 16.99, vegetarian: true, calories: 820 },
-        { name: "Chicken Marsala", carbs: 35, protein: 40, sugar: 10, energyScore: 4, price: 18.99, calories: 580 }
+        { name: "Chicken Marsala", carbs: 35, protein: 40, sugar: 10, energyScore: 4, price: 18.99, calories: 580 },
+        { name: "Tiramisu", carbs: 65, protein: 6, sugar: 45, energyScore: 1, price: 7.99, vegetarian: true, calories: 450, category: "dessert" },
+        { name: "Cappuccino", carbs: 8, protein: 4, sugar: 6, energyScore: 4, price: 4.99, vegetarian: true, calories: 80, category: "drink" }
       ]
     },
     {
@@ -86,18 +90,22 @@ const EnergyFoodFinder = () => {
       ]
     },
     {
-      id: 5,
-      name: "Burger Barn",
-      rating: 4.0,
-      distance: "0.5 mi",
-      cuisine: "Fast Food",
-      priceRange: 1,
+      id: 6,
+      name: "Sweet Dreams Cafe",
+      rating: 4.5,
+      distance: "1.0 mi",
+      cuisine: "Desserts & Coffee",
+      priceRange: 2,
       deliveryTime: "20-30 min",
       energyScore: 2,
-      dietOptions: [],
+      dietOptions: ['vegetarian'],
       featured: [
-        { name: "Double Cheeseburger & Fries", carbs: 95, protein: 30, sugar: 25, energyScore: 1, price: 8.99, calories: 1050 },
-        { name: "Grilled Chicken Sandwich", carbs: 40, protein: 35, sugar: 8, energyScore: 4, price: 7.99, calories: 420 }
+        { name: "Chocolate Lava Cake", carbs: 68, protein: 8, sugar: 52, energyScore: 1, price: 8.99, vegetarian: true, calories: 480, category: "dessert" },
+        { name: "Strawberry Cheesecake", carbs: 55, protein: 7, sugar: 42, energyScore: 1, price: 7.99, vegetarian: true, calories: 420, category: "dessert" },
+        { name: "Iced Caramel Latte", carbs: 35, protein: 8, sugar: 28, energyScore: 2, price: 5.99, vegetarian: true, calories: 250, category: "drink" },
+        { name: "Cold Brew Coffee", carbs: 0, protein: 0, sugar: 0, energyScore: 5, price: 4.99, vegan: true, calories: 5, category: "drink" },
+        { name: "Matcha Milkshake", carbs: 62, protein: 10, sugar: 48, energyScore: 2, price: 6.99, vegetarian: true, calories: 380, category: "dessert" },
+        { name: "Sugar-Free Iced Americano", carbs: 1, protein: 0, sugar: 0, energyScore: 5, price: 3.99, vegan: true, calories: 10, category: "drink" }
       ]
     }
   ];
@@ -262,7 +270,16 @@ const EnergyFoodFinder = () => {
             {/* Meal Planning Section */}
             <div className="lg:col-span-2 space-y-4">
               <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-blue-100 p-6">
-                <h2 className="text-xl font-semibold text-blue-900 mb-4">Plan Your Day</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-blue-900">Plan Your Day</h2>
+                  <button
+                    onClick={() => setPlannedMeals({ breakfast: [], lunch: [], dinner: [], snacks: [] })}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Reset Plan
+                  </button>
+                </div>
                 
                 {['breakfast', 'lunch', 'dinner', 'snacks'].map((mealTime) => (
                   <div key={mealTime} className="mb-6 last:mb-0">
@@ -278,7 +295,15 @@ const EnergyFoodFinder = () => {
                       {plannedMeals[mealTime].map((meal, idx) => (
                         <div key={idx} className="flex items-center justify-between bg-blue-50/50 rounded-lg p-3 border border-blue-100">
                           <div className="flex-1">
-                            <div className="font-medium text-blue-900">{meal.name}</div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-blue-900">{meal.name}</span>
+                              {meal.category === 'dessert' && (
+                                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full">Dessert</span>
+                              )}
+                              {meal.category === 'drink' && (
+                                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Drink</span>
+                              )}
+                            </div>
                             <div className="text-sm text-gray-600">{meal.restaurant}</div>
                             <div className="flex gap-3 text-xs text-gray-600 mt-1">
                               <span>{meal.calories} cal</span>
@@ -695,6 +720,12 @@ const EnergyFoodFinder = () => {
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <h5 className="font-medium text-blue-900">{item.name}</h5>
+                                {item.category === 'dessert' && (
+                                  <span className="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full">Dessert</span>
+                                )}
+                                {item.category === 'drink' && (
+                                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Drink</span>
+                                )}
                                 {item.energyScore <= 2 && (
                                   <div className="flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-medium">
                                     <AlertCircle className="w-3 h-3" />
@@ -739,6 +770,10 @@ const EnergyFoodFinder = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+export default EnergyFoodFinder;
   );
 };
 
